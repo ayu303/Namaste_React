@@ -1,0 +1,27 @@
+{
+  "name": "parcel",
+  "version": "1.0.0",
+  "description": "to learn",
+ 
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayu303/Namaste_React.git"
+  },
+  "keywords": [],
+  "author": "Ayush Sharma",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayu303/Namaste_React/issues"
+  },
+  "homepage": "https://github.com/ayu303/Namaste_React#readme",
+  "devDependencies": {
+    "parcel": "^2.16.3"
+  },
+  "dependencies": {
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}
