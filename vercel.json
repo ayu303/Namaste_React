@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npx parcel build index.html --dist-dir dist",
+  "outputDirectory": "dist",
+  "installCommand": "npm install"
+}
