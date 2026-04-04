@@ -8,21 +8,39 @@ const RestaurantMenu = ()=>{
      const {resId} =useParams();
   const [resmenu , setResmenu] = useState(null);
   const [showindex, setShowindex]=useState(null);
+  const [error, setError]=useState(null);
  
     useEffect(()=>{
        getRestaurantMenu();
-    },[])
+    },[resId])
     
     async function getRestaurantMenu(){
+      try {
         const data = await fetch(RESTAURANT_MENU_URL+resId);
+        if (!data.ok) {
+          throw new Error(`Menu API failed: ${data.status} ${data.statusText}`);
+        }
         const json = await data.json();
         console.log(json);
-        setResmenu(json?.data);
- 
-     
+        if (!json?.data) {
+          throw new Error("Menu API returned unexpected data shape.");
+        }
+        setResmenu(json.data);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Failed to load restaurant menu.");
+      }
     }
    
-  
+    if (error) {
+      return (
+        <div className="p-4 text-center text-red-600">
+          <p>Unable to load restaurant menu.</p>
+          <p>{error}</p>
+        </div>
+      );
+    }
+
     if(resmenu === null){
         return(<ShimmerUi/>)
     }
@@ -44,7 +62,7 @@ const RestaurantMenu = ()=>{
     return(
         <>
         <div className="text-center ">
-            <div className=" w-6/12 ml-66 text-left ">
+            <div className=" w-full md:w-6/12 md:ml-66 text-left ">
             <h1 className="font-extrabold text-2xl" >
                     {name}
             </h1>
@@ -65,7 +83,7 @@ const RestaurantMenu = ()=>{
 
             {
            Category.map((c,index)=>(
-            <div className=" w-6/12 ml-66  text-left border-b-1 mb-4" key={c?.card?.card?.title}>
+            <div className=" w-full md:w-6/12 md:ml-66 text-left not-last:border-b-1 mb-4" key={c?.card?.card?.title}>
                 
                  <RestaurantCategories listItems={c} 
                  showitems={index===showindex?true:false}

@@ -10,6 +10,7 @@ import UserContext from "../../utils/UserContext";
 const Body= ()=>{
     const [listofRestaurant,setListofRestaurant]=useState([]);
     const [filterlist,setFilterlist]=useState([]);
+    const [error,setError]=useState(null);
  
     const[searchtext,setSearchtext]=useState("");
     
@@ -23,15 +24,34 @@ const Body= ()=>{
        fetchdata();
     },[])
     async function fetchdata(){
+      try {
           const api = await fetch(RESTAURANT_LIST_URL);
-          console.log(api);
+          if (!api.ok) {
+            throw new Error(`Restaurant API failed: ${api.status} ${api.statusText}`);
+          }
           const Json = await api.json();
           console.log(Json);
-          setListofRestaurant(Json?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-          setFilterlist(Json?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-          
-        } 
+          const restaurants = Json?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+          if (!restaurants) {
+            throw new Error("Restaurant API returned unexpected data shape.");
+          }
+          setListofRestaurant(restaurants);
+          setFilterlist(restaurants);
+      } catch (err) {
+          console.error(err);
+          setError(err.message || "Failed to load restaurants.");
+      }
+    } 
    
+   if (error) {
+     return (
+       <div className="p-4 text-center text-red-600">
+         <p>Unable to load restaurants.</p>
+         <p>{error}</p>
+       </div>
+     );
+   }
+
    if(listofRestaurant.length===0){
        return(
         
@@ -40,24 +60,16 @@ const Body= ()=>{
        )
    }
   return(
-    <div className="p-8 ">
-      <div className="search flex items-center justify-center gap-x-1 ">
-       
-          <input className="h-7 border-2" type="text" value={searchtext} onChange={(e)=>{
-                  
+    <div className="p-4 md:p-8">
+      <div className="search flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 mb-4">
+          <input className="h-10 border-2 rounded-md px-2 w-full md:w-64" type="text" value={searchtext} onChange={(e)=>{
                 setSearchtext(e.target.value);
-            
-          }}></input>
-     
-          <div>
-            <input className="h-7 border-2" type="text" value={username} onChange={(e)=>{
-                  
+          }} />
+          <input className="h-10 border-2 rounded-md px-2 w-full md:w-64" type="text" value={username} onChange={(e)=>{
                 setName(e.target.value);
-            
-          }}></input>
-          </div>
-        <div className="search-icon-container w-6 ">
-          <button className="image-btn cursor-pointer " onClick={
+          }} />
+        <div className="search-icon-container w-10">
+          <button className="image-btn cursor-pointer" onClick={
             ()=>{
                 const searchname = listofRestaurant.filter((res)=>
               (  res.info.name.toLowerCase().includes(searchtext.toLowerCase()))
@@ -80,7 +92,7 @@ const Body= ()=>{
      
      
       
-      <div className="card-container flex flex-wrap gap-y-3" >
+      <div className="card-container flex flex-wrap justify-center gap-4" >
         {filterlist.map((restaurant,index)=>{
         return( 
         <Link className="link" key={restaurant.info.id} to={"/restaurants/" + restaurant.info.id}>

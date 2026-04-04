@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import { CARD_IMAGE_URL } from "../../utils/urls";
-import { Link } from "react-router-dom";
 const Restaurantcard=(props)=>{
   const {restaurantdata}=props;
   const {
@@ -11,9 +9,9 @@ const Restaurantcard=(props)=>{
     sla
   }=restaurantdata?.info
   return(
-    <div className="card mt-5 mr-8 w-52 " >
+    <div className="card mt-5 mr-0 sm:mr-8 w-full sm:w-64 md:w-56 lg:w-72" >
       
-     <img className="card-image rounded-lg" src={CARD_IMAGE_URL+cloudinaryImageId} alt="card image"/>
+     <img className="card-image rounded-lg h-40 object-cover w-full" src={CARD_IMAGE_URL+cloudinaryImageId} alt="card image"/>
 
       <div className="card-content">
         <h3><b>{name}</b></h3>

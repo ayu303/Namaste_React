@@ -12,12 +12,12 @@ const Header= ()=>{
   const cartItem = useSelector((store)=> store.cart.items)  
   console.log("cartItem",cartItem);     
   return(
-    <div className="header flex items-center justify-between">
-        <div className="app-logo w-30">
-          <img className="logo" src={LOGO_URL} alt="logo"/>
+    <div className="header flex flex-wrap items-center justify-between px-4 py-2 md:px-8 bg-white shadow-sm">
+        <div className="app-logo flex-shrink-0">
+          <img className="logo h-10 w-auto" src={LOGO_URL} alt="logo"/>
         </div>
-        <div className=" ">
-          <ul className="flex ">
+        <div className="w-full md:w-auto">
+          <ul className="flex flex-wrap items-center justify-center md:justify-end gap-2 md:gap-5 mt-2 md:mt-0">
          
                 
               <li className="px-5">
